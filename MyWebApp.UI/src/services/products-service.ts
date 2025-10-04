@@ -27,4 +27,9 @@ export class ProductsService {
   {
     return this.http.get<Product[]>(this.apiUrl);
   }
+
+  getProductsByPage(page = 1, pageSize = 10): Observable<Product[]>
+  {
+    return this.http.get<Product[]>(`${this.apiUrl}?page=${page}&pageSize=${pageSize}`);
+  }
 }

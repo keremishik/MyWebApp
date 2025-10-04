@@ -10,14 +10,21 @@ namespace MyWebApp.Api.Controllers
     public class ProductsController : ControllerBase
     {
         [FromServices]
-        public MyWebAppContext? Context {  get; set; }
-
+        public MyWebAppContext Context { get; set; }
 
         [HttpGet(Name = "GetProducts")]
-        public async Task<IEnumerable<Product>> Get()
+        public async Task<IEnumerable<Product>> Get(int page=1, int pageSize= 10)
         {
-            return await Context.Products.ToListAsync();
+            int skip = (page - 1) * pageSize;
+            var products = await Context.Products.Skip(skip).Take(pageSize).ToListAsync();
+            return products;
         }
+
+        //[HttpGet(Name = "GetProducts")]
+        //public async Task<IEnumerable<Product>> Get()
+        //{
+        //    return await Context.Products.ToListAsync();
+        //}
 
         //public IEnumerable<Product> Get()
         //{

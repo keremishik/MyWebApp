@@ -36,6 +36,8 @@ import { ProductsService } from '../../services/products-service';
         }
       </tbody>
     </table>
+    <button (click)="previousPage()">Previous Page</button>
+    <button (click)="nextPage()">Next Page</button>
   `,
   styles: `
     table {
@@ -57,13 +59,35 @@ export class Products implements OnInit
 {
   private productsService = inject(ProductsService);
   products: any[] = [];
+  page = 1;
+  pageSize = 10;
   
   ngOnInit()
   {
-    this.productsService.getProducts().subscribe(
+    this.loadProducts();
+  }
+
+  loadProducts()
+  {
+    this.productsService.getProductsByPage(this.page, this.pageSize).subscribe(
       (products: any[]) => {
         this.products = products;
       }
     );
+  }
+
+  nextPage()
+  {
+    this.page++;
+    this.loadProducts();
+  }
+
+  previousPage()
+  {
+    if (this.page > 1)
+    {
+      this.page--;
+      this.loadProducts();
+    }
   }
 }
