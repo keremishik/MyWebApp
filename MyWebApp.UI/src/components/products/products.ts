@@ -1,0 +1,69 @@
+import { Component, inject } from '@angular/core';
+import { ProductsService } from '../../services/products-service';
+
+@Component({
+  selector: 'app-products',
+  imports: [],
+  template: `
+    <h1>Products</h1>
+    <table>
+      <tr>
+        <th>Product ID</th>
+        <th>Product Name</th>
+        <th>Supplier ID</th>
+        <th>Category ID</th>
+        <th>Quantity Per Unit</th>
+        <th>Unit Price</th>
+        <th>Units In Stock</th>
+        <th>Units On Order</th>
+        <th>Reorder Level</th>
+        <th>Discontinued</th>
+      </tr>
+      <tbody>
+        @for (product of products; track product.productId) {
+          <tr>
+            <td>{{ product.productId }}</td>
+            <td>{{ product.productName }}</td>
+            <td>{{ product.supplierId }}</td>
+            <td>{{ product.categoryId }}</td>
+            <td>{{ product.quantityPerUnit }}</td>
+            <td>{{ product.unitPrice }}</td>
+            <td>{{ product.unitsInStock }}</td>
+            <td>{{ product.unitsOnOrder }}</td>
+            <td>{{ product.reorderLevel }}</td>
+            <td>{{ product.discontinued }}</td>
+          </tr>
+        }
+      </tbody>
+    </table>
+  `,
+  styles: `
+    table {
+      width: 100%;
+      border-collapse: collapse;
+    }
+    th, td {
+      border: 1px solid #ddd;
+      padding: 8px;
+      text-align: left;
+    }
+    th {
+      background-color: #f2f2f2;
+    }
+  `
+})
+
+export class Products 
+{
+  private productsService = inject(ProductsService);
+  products: any[] = [];
+  
+  ngOnInit()
+  {
+    this.productsService.getProductsAsync().then(
+      (products: any[]) => {
+        this.products = products;
+      }
+    );
+  }
+}

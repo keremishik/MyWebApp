@@ -1,0 +1,6 @@
+@MyWebApp.Api_HostAddress = http://localhost:7025
+
+GET {{MyWebApp.Api_HostAddress}}/api/products/
+Accept: application/json
+
+###
