@@ -1,4 +1,4 @@
-import { Component, inject } from '@angular/core';
+import { Component, inject, OnInit } from '@angular/core';
 import { ProductsService } from '../../services/products-service';
 
 @Component({
@@ -53,14 +53,14 @@ import { ProductsService } from '../../services/products-service';
   `
 })
 
-export class Products 
+export class Products implements OnInit 
 {
   private productsService = inject(ProductsService);
   products: any[] = [];
   
   ngOnInit()
   {
-    this.productsService.getProductsAsync().then(
+    this.productsService.getProducts().subscribe(
       (products: any[]) => {
         this.products = products;
       }

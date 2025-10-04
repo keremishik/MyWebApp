@@ -1,5 +1,6 @@
 import { HttpClient } from '@angular/common/http';
 import { inject, Injectable } from '@angular/core';
+import { Observable } from 'rxjs';
 
 export interface Product {
   productId: number;
@@ -18,17 +19,12 @@ export interface Product {
   providedIn: 'root'
 })
 export class ProductsService {
-  private apiUrl = 'http://localhost:7025/api/products';
+  private apiUrl = 'https://localhost:7025/api/products';
 
   private http = inject(HttpClient);
 
-  getProducts(): any
+  getProducts(): Observable<Product[]>
   {
     return this.http.get<Product[]>(this.apiUrl);
-  }
-
-  getProductsAsync(): any
-  {
-    return this.http.get<Product[]>(this.apiUrl).toPromise();
   }
 }
