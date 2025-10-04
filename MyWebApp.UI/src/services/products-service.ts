@@ -32,4 +32,9 @@ export class ProductsService {
   {
     return this.http.get<Product[]>(`${this.apiUrl}?page=${page}&pageSize=${pageSize}`);
   }
+
+  getProductAmount(): Observable<number>
+  {
+    return this.http.get<number>(`${this.apiUrl}/amount`);
+  }
 }

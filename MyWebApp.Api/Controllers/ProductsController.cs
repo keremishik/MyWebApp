@@ -20,6 +20,12 @@ namespace MyWebApp.Api.Controllers
             return products;
         }
 
+        [HttpGet("amount", Name = "GetProductAmount")]
+        public async Task<int> GetTotalCount()
+        {
+            return await Context.Products.CountAsync();
+        }
+
         //[HttpGet(Name = "GetProducts")]
         //public async Task<IEnumerable<Product>> Get()
         //{

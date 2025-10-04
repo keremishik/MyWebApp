@@ -38,6 +38,7 @@ import { ProductsService } from '../../services/products-service';
     </table>
     <button (click)="previousPage()">Previous Page</button>
     <button (click)="nextPage()">Next Page</button>
+    <p>Page {{ page }} of {{ totalPages }}</p>
   `,
   styles: `
     table {
@@ -61,6 +62,7 @@ export class Products implements OnInit
   products: any[] = [];
   page = 1;
   pageSize = 10;
+  totalPages = 0;
   
   ngOnInit()
   {
@@ -74,6 +76,11 @@ export class Products implements OnInit
         this.products = products;
       }
     );
+      this.productsService.getProductAmount().subscribe(
+        (amount: number) => {
+          this.totalPages = Math.ceil(amount / this.pageSize);
+        }
+      );
   }
 
   nextPage()
