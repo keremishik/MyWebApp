@@ -19,22 +19,29 @@ export interface Product {
   providedIn: 'root'
 })
 export class ProductsService {
-  private apiUrl = 'https://localhost:7025/api/products';
+  private apiUrl = 'https://localhost:7025/api/';
+  private productsUrl = `${this.apiUrl}/products`;
+  private createUrl = `${this.apiUrl}/create`;
 
   private http = inject(HttpClient);
 
   getProducts(): Observable<Product[]>
   {
-    return this.http.get<Product[]>(this.apiUrl);
+    return this.http.get<Product[]>(this.productsUrl);
   }
 
   getProductsByPage(page = 1, pageSize = 10): Observable<Product[]>
   {
-    return this.http.get<Product[]>(`${this.apiUrl}?page=${page}&pageSize=${pageSize}`);
+    return this.http.get<Product[]>(`${this.productsUrl}?page=${page}&pageSize=${pageSize}`);
   }
 
   getProductAmount(): Observable<number>
   {
-    return this.http.get<number>(`${this.apiUrl}/amount`);
+    return this.http.get<number>(`${this.productsUrl}/amount`);
+  }
+
+  createProduct(product: Product): Observable<Product[]>
+  {
+    return this.http.post<Product[]>(this.createUrl, product);
   }
 }

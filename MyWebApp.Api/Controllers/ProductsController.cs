@@ -26,6 +26,13 @@ namespace MyWebApp.Api.Controllers
             return await Context.Products.CountAsync();
         }
 
+        [HttpPost("create", Name = "CreateProducts")]
+        public async Task Create(Product product)
+        {
+            Context.Products.Add(product);
+            await Context.SaveChangesAsync();
+        }
+
         //[HttpGet(Name = "GetProducts")]
         //public async Task<IEnumerable<Product>> Get()
         //{
