@@ -20,8 +20,8 @@ export interface Product {
 })
 export class ProductsService {
   private apiUrl = 'https://localhost:7025/api/';
-  private productsUrl = `${this.apiUrl}/products`;
-  private createUrl = `${this.apiUrl}/create`;
+  private productsUrl = `${this.apiUrl}products`;
+  private createUrl = `${this.apiUrl}create`;
 
   private http = inject(HttpClient);
 
