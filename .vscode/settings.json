@@ -4,6 +4,20 @@
         "**/.svn": true,
         "**/.hg": true,
         "**/.DS_Store": true,
-        "**/Thumbs.db": true
+        "**/Thumbs.db": true,
+        "[!M]*/**": true,
+        "M[!y]*/**": true,
+        "My[!W]*/**": true,
+        "MyW[!e]*/**": true,
+        "MyWe[!b]*/**": true,
+        "MyWeb[!A]*/**": true,
+        "MyWebA[!p]*/**": true,
+        "MyWebAp[!p]*/**": true,
+        "MyWebApp[!.]*/**": true,
+        "MyWebApp.[!U]*/**": true,
+        "MyWebApp.U[!I]*/**": true,
+        "MyWebApp.UI/[!s]*/**": true,
+        "MyWebApp.UI/s[!r]*/**": true,
+        "MyWebApp.UI/sr[!c]*/**": true
     }
 }
