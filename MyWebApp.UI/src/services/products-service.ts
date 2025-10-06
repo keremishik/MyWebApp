@@ -3,7 +3,7 @@ import { inject, Injectable } from '@angular/core';
 import { Observable } from 'rxjs';
 
 export interface Product {
-  productId: number;
+  productId?: number;
   productName: string;
   supplierId?: number | null;
   categoryId?: number | null;
@@ -21,7 +21,6 @@ export interface Product {
 export class ProductsService {
   private apiUrl = 'https://localhost:7025/api/';
   private productsUrl = `${this.apiUrl}products`;
-  private createUrl = `${this.apiUrl}create`;
 
   private http = inject(HttpClient);
 
@@ -40,8 +39,13 @@ export class ProductsService {
     return this.http.get<number>(`${this.productsUrl}/amount`);
   }
 
-  createProduct(product: Product): Observable<Product[]>
+  createProduct(product: Product): Observable<Product>
   {
-    return this.http.post<Product[]>(this.createUrl, product);
+    return this.http.post<Product>(`${this.productsUrl}/create`, product);
+  }
+
+  deleteProduct(productId: number): Observable<Product[]>
+  {
+    return this.http.delete<Product[]>(`${this.productsUrl}/delete?productId=${productId}`);
   }
 }
