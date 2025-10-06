@@ -1,60 +1,67 @@
 import { Component } from '@angular/core';
+import { Header } from './header/header';
+import { Sidebar } from './sidebar/sidebar';
+import { Footer } from './footer/footer';
 
 @Component({
   selector: 'panel-layout',
-  imports: [],
+  imports: [Header, Sidebar, Footer],
   template: `
     <div class="panel-container">
       
-      <header class="panel-header">
-        <div class="panel-header-left">
-          Smart Manager
-        </div>
-        <div class="panel-header-right">
-          <div class="panel-user">
-            Username
-          </div>
-        </div>
+      <header class="header-container">
+        <app-header></app-header>
       </header>
 
-      <aside class="panel-sidebar">
-        <div class="panel-sidebar-item">
-          <a routerLink="/products" routerLinkActive="active">Products</a>
-        </div>
+      <aside class="sidebar-container">
+        <app-sidebar></app-sidebar>
       </aside>
 
-      <main class="panel-content">
+      <main class="content-container">
         <ng-content></ng-content>
       </main>
 
-      <footer class="panel-footer">
+      <footer class="footer-container">
+        <app-footer></app-footer>
       </footer>
     </div>
   `,
   styles: [`
+    :host { display: block; min-height: 100vh; }
+
     .panel-container {
-      display: flex;
-      flex-direction: column;
-      height: 100%;
+      display: grid;
+      grid-template-columns: 20% 80%;
+      grid-template-rows: auto 1fr auto;
+      grid-template-areas:
+        "header header"
+        "sidebar content"
+        "footer footer";
+      min-height: 100vh;
+      background: #f7f9fc;
     }
-    .panel-header {
-      display: flex;
-      justify-content: space-between;
-      align-items: center;
-      padding: 10px;
-      background-color: #f5f5f5;
+
+    .header-container {
+      grid-area: header;
+     }
+
+    .sidebar-container {
+      grid-area: sidebar;
+      background: #f4f7fb;
+      border-right: 1px solid #e6e9ef;
+      overflow: auto;
     }
-    .panel-header-left {
-      font-size: 24px;
-      font-weight: bold;
+
+    .content-container {
+      grid-area: content;
+      padding: 16px;
+      overflow: auto;
+      background: #ffffff;
     }
-    .panel-header-right {
-      display: flex;
-      align-items: center;
-    }
-    .panel-user {
-      font-size: 18px;
-      font-weight: bold;
+
+    .footer-container {
+      grid-area: footer;
+      background: #fff;
     }
   `]
 })
