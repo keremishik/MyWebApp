@@ -37,6 +37,9 @@ import { ProductsService } from '../../services/products-service';
       </tbody>
     </table>
     <button (click)="previousPage()">Previous Page</button>
+    @for (page of pages; track page) {
+      <button (click)="goToPage(page)">{{ page }}</button>
+    }
     <button (click)="nextPage()">Next Page</button>
     <p>Page {{ page }} of {{ totalPages }}</p>
   `,
@@ -63,7 +66,13 @@ export class Products implements OnInit
   page = 1;
   pageSize = 10;
   totalPages = 0;
-  
+  pages: number[] = [];
+
+  getPages(): number[]
+  {
+    return Array.from({ length: this.totalPages }, (_, i) => i + 1);
+  }
+
   ngOnInit()
   {
     this.loadProducts();
@@ -79,14 +88,18 @@ export class Products implements OnInit
       this.productsService.getProductAmount().subscribe(
         (amount: number) => {
           this.totalPages = Math.ceil(amount / this.pageSize);
+          this.pages = this.getPages();
         }
       );
   }
 
   nextPage()
   {
-    this.page++;
-    this.loadProducts();
+    if (this.page < this.totalPages)
+    {
+      this.page++;
+      this.loadProducts();
+    }
   }
 
   previousPage()
@@ -96,5 +109,11 @@ export class Products implements OnInit
       this.page--;
       this.loadProducts();
     }
+  }
+
+  goToPage(page: number)
+  {
+    this.page = page;
+    this.loadProducts();
   }
 }
