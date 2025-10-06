@@ -15,6 +15,9 @@
         "MyWebAp[!p]*/**": true,
         "MyWebApp[!.]*/**": true,
         "MyWebApp.[!U]*/**": true,
-        "MyWebApp.U[!I]*/**": true
+        "MyWebApp.U[!I]*/**": true,
+        "MyWebApp.UI/[!s]*/**": true,
+        "MyWebApp.UI/s[!r]*/**": true,
+        "MyWebApp.UI/sr[!c]*/**": true
     }
 }
