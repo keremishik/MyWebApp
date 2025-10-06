@@ -34,11 +34,25 @@ namespace MyWebApp.Api.Controllers
         }
 
         [HttpDelete("delete", Name = "DeleteProduct")]
-        public async Task Delete(int productId)
+        public async Task<IActionResult> Delete(int productId)
         {
             var product = await Context.Products.FindAsync(productId);
+
+            if (product == null)
+            {
+                return NotFound(new { message = $"Product with ID {productId} not found." });
+            }
+
+            // Check for existing order details referencing this product to avoid FK constraint violations
+            var hasOrderDetails = await Context.OrderDetails.AnyAsync(od => od.ProductId == productId);
+            if (hasOrderDetails)
+            {
+                return Conflict(new { message = "Cannot delete product because it is referenced by existing order details." });
+            }
+
             Context.Products.Remove(product);
             await Context.SaveChangesAsync();
+            return NoContent();
         }
 
         //[HttpGet(Name = "GetProducts")]

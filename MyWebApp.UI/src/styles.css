@@ -1,1 +1,19 @@
-/* You can add global styles to this file, and also import other style files */
+html, body {
+  margin: 0;
+  padding: 0;
+}
+
+*, *::before, *::after {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+/* Error message styling for product operations */
+.error-message {
+  color: #b00020;
+  background: #fdecec;
+  border: 1px solid #f5b5b8;
+  padding: 8px 12px;
+  border-radius: 4px;
+  margin-top: 8px;
+}

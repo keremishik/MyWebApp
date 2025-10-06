@@ -8,59 +8,84 @@ import { PanelLayout } from '../layouts/panel-layout/panel-layout';
   imports: [PanelLayout, FormsModule],
   template: `
     <panel-layout>
-        <div class="form-container">
-          <h2>Add New Product</h2>
-          <form #productForm="ngForm" (ngSubmit)="createProduct(newProduct)">
-            <div class="form-group">
-              <label for="productName">Product Name:</label>
-              <input type="text" id="productName" name="productName" [(ngModel)]="newProduct.productName" required>
+      @if (productFormVisible) {
+        <div class="modal-overlay">
+          <div class="modal" role="dialog" aria-modal="true">
+            <div class="modal-header">
+              <h2>Add Product</h2>
+              <button class="close-btn" type="button" (click)="closeProductForm()">×</button>
             </div>
-            <div class="form-group">
-              <label for="supplierId">Supplier ID:</label>
-              <input type="number" id="supplierId" name="supplierId" [(ngModel)]="newProduct.supplierId">
+            <div class="modal-body">
+              <form #productForm="ngForm" (ngSubmit)="addProduct()">
+                <div class="form-grid">
+                  <div class="field">
+                    <label for="productName">Product Name</label>
+                    <input id="productName" name="productName" [(ngModel)]="newProduct.productName" required>
+                  </div>
+
+                  <div class="field">
+                    <label for="supplierId">Supplier ID</label>
+                    <input id="supplierId" name="supplierId" type="number" [(ngModel)]="newProduct.supplierId" required>
+                  </div>
+
+                  <div class="field">
+                    <label for="categoryId">Category ID</label>
+                    <input id="categoryId" name="categoryId" type="number" [(ngModel)]="newProduct.categoryId" required>
+                  </div>
+
+                  <div class="field">
+                    <label for="quantityPerUnit">Quantity Per Unit</label>
+                    <input id="quantityPerUnit" name="quantityPerUnit" [(ngModel)]="newProduct.quantityPerUnit" required>
+                  </div>
+
+                  <div class="field">
+                    <label for="unitPrice">Unit Price</label>
+                    <input id="unitPrice" name="unitPrice" type="number" step="0.01" [(ngModel)]="newProduct.unitPrice" required>
+                  </div>
+
+                  <div class="field">
+                    <label for="unitsInStock">Units In Stock</label>
+                    <input id="unitsInStock" name="unitsInStock" type="number" [(ngModel)]="newProduct.unitsInStock" required>
+                  </div>
+
+                  <div class="field">
+                    <label for="unitsOnOrder">Units On Order</label>
+                    <input id="unitsOnOrder" name="unitsOnOrder" type="number" [(ngModel)]="newProduct.unitsOnOrder" required>
+                  </div>
+
+                  <div class="field">
+                    <label for="reorderLevel">Reorder Level</label>
+                    <input id="reorderLevel" name="reorderLevel" type="number" [(ngModel)]="newProduct.reorderLevel" required>
+                  </div>
+
+                  <div class="field checkbox-field">
+                    <label for="discontinued">Discontinued</label>
+                    <input id="discontinued" name="discontinued" type="checkbox" [(ngModel)]="newProduct.discontinued">
+                  </div>
+                </div>
+
+                <div class="form-actions">
+                  <button type="submit" [disabled]="!productForm.valid">Save</button>
+                  <button type="button" (click)="closeProductForm()">Cancel</button>
+                </div>
+              </form>
             </div>
-            <div class="form-group">
-              <label for="categoryId">Category ID:</label>
-              <input type="number" id="categoryId" name="categoryId" [(ngModel)]="newProduct.categoryId">
-            </div>
-            <div class="form-group">
-              <label for="quantityPerUnit">Quantity Per Unit:</label>
-              <input type="text" id="quantityPerUnit" name="quantityPerUnit" [(ngModel)]="newProduct.quantityPerUnit">
-            </div>
-            <div class="form-group">
-              <label for="unitPrice">Unit Price:</label>
-              <input type="number" id="unitPrice" name="unitPrice" [(ngModel)]="newProduct.unitPrice">
-            </div>
-            <div class="form-group">
-              <label for="unitsInStock">Units In Stock:</label>
-              <input type="number" id="unitsInStock" name="unitsInStock" [(ngModel)]="newProduct.unitsInStock">
-            </div>
-            <div class="form-group">
-              <label for="unitsOnOrder">Units On Order:</label>
-              <input type="number" id="unitsOnOrder" name="unitsOnOrder" [(ngModel)]="newProduct.unitsOnOrder">
-            </div>
-            <div class="form-group">
-              <label for="reorderLevel">Reorder Level:</label>
-              <input type="number" id="reorderLevel" name="reorderLevel" [(ngModel)]="newProduct.reorderLevel">
-            </div>
-            <div class="form-group">
-              <label for="discontinued">Discontinued:</label>
-              <input type="checkbox" id="discontinued" name="discontinued" [(ngModel)]="newProduct.discontinued">
-            </div>
-            <div class="form-group">
-              <button type="submit" [disabled]="productForm.invalid">Add Product</button>
-            </div>
-          </form>
-        </div>
-        <div class="table-container">
-          <div class="table-header">
-            <h1>Products</h1>
           </div>
-          <div class="table-content">
-            <table>
-              <tr>
-                <th>Product ID</th>
-                <th>Product Name</th>
+        </div>
+      }
+      <button type="button" (click)="showProductForm()">Add Product</button>
+      <div class="table-container">
+        <div class="table-header">
+          <h1>Products</h1>
+          @if (errorMessage) {
+            <p class="error-message">{{ errorMessage }}</p>
+          }
+        </div>
+        <div class="table-content">
+          <table>
+            <tr>
+              <th>Product ID</th>
+              <th>Product Name</th>
                 <th>Supplier ID</th>
                 <th>Category ID</th>
                 <th>Quantity Per Unit</th>
@@ -85,6 +110,7 @@ import { PanelLayout } from '../layouts/panel-layout/panel-layout';
                   <td>{{ product.reorderLevel }}</td>
                   <td>{{ product.discontinued }}</td>
                   <td>
+                    <button (click)="editProduct(product)">Edit</button>
                     <button (click)="deleteProduct(product.productId)">Delete</button>
                   </td>
                 </tr>
@@ -104,12 +130,6 @@ import { PanelLayout } from '../layouts/panel-layout/panel-layout';
     </panel-layout>
   `,
   styles: `
-    :host {
-      display: block;
-      padding: 16px;
-      background: #f7f9fc;
-    }
-
     .table-container {
       background: #fff;
       border-radius: 12px;
@@ -211,12 +231,93 @@ import { PanelLayout } from '../layouts/panel-layout/panel-layout';
       border-color: #2563eb;
       color: #fff;
     }
+    .modal-overlay {
+      position: fixed;
+      inset: 0;
+      background: rgba(0,0,0,0.35);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      z-index: 1000;
+    }
+    .modal {
+      background: #fff;
+      border-radius: 12px;
+      box-shadow: 0 12px 32px rgba(0,0,0,0.2);
+      width: 100%;
+      max-width: 640px;
+      overflow: hidden;
+    }
+    .modal-header {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 16px 20px;
+      border-bottom: 1px solid #e6e9ef;
+    }
+    .modal-body {
+      padding: 16px 20px;
+    }
+    .close-btn {
+      border: none;
+      background: transparent;
+      font-size: 20px;
+      cursor: pointer;
+      line-height: 1;
+    }
+
+    /* Dikey ve düzenli form hizalaması */
+    .form-grid {
+      display: grid;
+      grid-template-columns: 1fr;
+      row-gap: 12px;
+    }
+    .field label {
+      display: block;
+      margin-bottom: 6px;
+      font-weight: 600;
+      color: #374151;
+    }
+    .field input,
+    .field select,
+    .field textarea {
+      width: 100%;
+      padding: 8px 10px;
+      border: 1px solid #d1d5db;
+      border-radius: 8px;
+      background: #fff;
+      font-size: 14px;
+    }
+    .checkbox-field {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+
+    .form-actions {
+      display: flex;
+      gap: 10px;
+      margin-top: 12px;
+    }
+    .form-actions button {
+      padding: 8px 12px;
+      border: 1px solid #d1d5db;
+      border-radius: 8px;
+      background: #ffffff;
+      color: #374151;
+      cursor: pointer;
+      transition: all .15s ease-in-out;
+    }
+    .form-actions button:hover {
+      background: #f3f4f6;
+      border-color: #9ca3af;
+      transform: translateY(-1px);
+    }
   `
 })
-
-export class Products implements OnInit 
-{
+export class Products implements OnInit {
   private productsService = inject(ProductsService);
+  private readonly title = 'Products';
   products: any[] = [];
   newProduct: Product = {
     productName: '',
@@ -233,15 +334,23 @@ export class Products implements OnInit
   pageSize = 10;
   totalPages = 0;
   pages: number[] = [];
+  productFormVisible = false;
+  errorMessage: string | null = null;
 
-  getPages(): number[]
+  getPages()
   {
-    return Array.from({ length: this.totalPages }, (_, i) => i + 1);
+    this.productsService.getProductAmount().subscribe(
+      (amount: number) => {
+        this.totalPages = Math.ceil(amount / this.pageSize);
+        this.pages = Array.from({ length: this.totalPages }, (_, i) => i + 1);
+      }
+    );
   }
 
   ngOnInit()
   {
     this.loadProducts();
+    this.getPages();
   }
 
   loadProducts()
@@ -251,12 +360,6 @@ export class Products implements OnInit
         this.products = products;
       }
     );
-      this.productsService.getProductAmount().subscribe(
-        (amount: number) => {
-          this.totalPages = Math.ceil(amount / this.pageSize);
-          this.pages = this.getPages();
-        }
-      );
   }
 
   nextPage()
@@ -285,14 +388,28 @@ export class Products implements OnInit
 
   deleteProduct(productId: number)
   {
-    this.productsService.deleteProduct(productId).subscribe(() => { this.loadProducts();});
+    this.errorMessage = null;
+    this.productsService.deleteProduct(productId).subscribe({
+      next: () => {
+        this.loadProducts();
+      },
+      error: (err) => {
+        // Try to extract server-provided message, fallback to generic
+        const serverMessage = err?.error?.message;
+        this.errorMessage = serverMessage ?? 'Delete failed: product is in use by orders or not found.';
+      }
+    });
+  }
+
+  editProduct(product: Product)
+  {
+    
   }
 
   createProduct(product: Product)
   {
     this.productsService.createProduct(product).subscribe(() => { 
       this.loadProducts();
-      // reset form model after successful creation
       this.newProduct = {
         productName: '',
         supplierId: null,
@@ -304,6 +421,22 @@ export class Products implements OnInit
         reorderLevel: null,
         discontinued: false
       };
+      this.closeProductForm();
     });
+  }
+
+  addProduct()
+  {
+    this.createProduct(this.newProduct);
+  }
+
+  showProductForm()
+  {
+    this.productFormVisible = true;
+  }
+
+  closeProductForm()
+  {
+    this.productFormVisible = false;
   }
 }
