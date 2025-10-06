@@ -1,12 +1,57 @@
 import { Component, inject, OnInit } from '@angular/core';
-import { ProductsService } from '../../services/products-service';
+import { FormsModule } from '@angular/forms';
+import { ProductsService, Product } from '../../services/products-service';
 import { PanelLayout } from '../layouts/panel-layout/panel-layout';
 
 @Component({
   selector: 'app-products',
-  imports: [PanelLayout],
+  imports: [PanelLayout, FormsModule],
   template: `
     <panel-layout>
+        <div class="form-container">
+          <h2>Add New Product</h2>
+          <form #productForm="ngForm" (ngSubmit)="createProduct(newProduct)">
+            <div class="form-group">
+              <label for="productName">Product Name:</label>
+              <input type="text" id="productName" name="productName" [(ngModel)]="newProduct.productName" required>
+            </div>
+            <div class="form-group">
+              <label for="supplierId">Supplier ID:</label>
+              <input type="number" id="supplierId" name="supplierId" [(ngModel)]="newProduct.supplierId">
+            </div>
+            <div class="form-group">
+              <label for="categoryId">Category ID:</label>
+              <input type="number" id="categoryId" name="categoryId" [(ngModel)]="newProduct.categoryId">
+            </div>
+            <div class="form-group">
+              <label for="quantityPerUnit">Quantity Per Unit:</label>
+              <input type="text" id="quantityPerUnit" name="quantityPerUnit" [(ngModel)]="newProduct.quantityPerUnit">
+            </div>
+            <div class="form-group">
+              <label for="unitPrice">Unit Price:</label>
+              <input type="number" id="unitPrice" name="unitPrice" [(ngModel)]="newProduct.unitPrice">
+            </div>
+            <div class="form-group">
+              <label for="unitsInStock">Units In Stock:</label>
+              <input type="number" id="unitsInStock" name="unitsInStock" [(ngModel)]="newProduct.unitsInStock">
+            </div>
+            <div class="form-group">
+              <label for="unitsOnOrder">Units On Order:</label>
+              <input type="number" id="unitsOnOrder" name="unitsOnOrder" [(ngModel)]="newProduct.unitsOnOrder">
+            </div>
+            <div class="form-group">
+              <label for="reorderLevel">Reorder Level:</label>
+              <input type="number" id="reorderLevel" name="reorderLevel" [(ngModel)]="newProduct.reorderLevel">
+            </div>
+            <div class="form-group">
+              <label for="discontinued">Discontinued:</label>
+              <input type="checkbox" id="discontinued" name="discontinued" [(ngModel)]="newProduct.discontinued">
+            </div>
+            <div class="form-group">
+              <button type="submit" [disabled]="productForm.invalid">Add Product</button>
+            </div>
+          </form>
+        </div>
         <div class="table-container">
           <div class="table-header">
             <h1>Products</h1>
@@ -24,7 +69,8 @@ import { PanelLayout } from '../layouts/panel-layout/panel-layout';
                 <th>Units On Order</th>
                 <th>Reorder Level</th>
                 <th>Discontinued</th>
-            </tr>
+                <th>Actions</th>
+              </tr>
             <tbody>
               @for (product of products; track product.productId) {
                 <tr>
@@ -39,6 +85,7 @@ import { PanelLayout } from '../layouts/panel-layout/panel-layout';
                   <td>{{ product.reorderLevel }}</td>
                   <td>{{ product.discontinued }}</td>
                   <td>
+                    <button (click)="deleteProduct(product.productId)">Delete</button>
                   </td>
                 </tr>
               }
@@ -171,6 +218,17 @@ export class Products implements OnInit
 {
   private productsService = inject(ProductsService);
   products: any[] = [];
+  newProduct: Product = {
+    productName: '',
+    supplierId: null,
+    categoryId: null,
+    quantityPerUnit: null,
+    unitPrice: null,
+    unitsInStock: null,
+    unitsOnOrder: null,
+    reorderLevel: null,
+    discontinued: false
+  };
   page = 1;
   pageSize = 10;
   totalPages = 0;
@@ -223,5 +281,29 @@ export class Products implements OnInit
   {
     this.page = page;
     this.loadProducts();
+  }
+
+  deleteProduct(productId: number)
+  {
+    this.productsService.deleteProduct(productId).subscribe(() => { this.loadProducts();});
+  }
+
+  createProduct(product: Product)
+  {
+    this.productsService.createProduct(product).subscribe(() => { 
+      this.loadProducts();
+      // reset form model after successful creation
+      this.newProduct = {
+        productName: '',
+        supplierId: null,
+        categoryId: null,
+        quantityPerUnit: null,
+        unitPrice: null,
+        unitsInStock: null,
+        unitsOnOrder: null,
+        reorderLevel: null,
+        discontinued: false
+      };
+    });
   }
 }
