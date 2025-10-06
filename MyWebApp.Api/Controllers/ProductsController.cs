@@ -33,6 +33,14 @@ namespace MyWebApp.Api.Controllers
             await Context.SaveChangesAsync();
         }
 
+        [HttpDelete("delete", Name = "DeleteProduct")]
+        public async Task Delete(int productId)
+        {
+            var product = await Context.Products.FindAsync(productId);
+            Context.Products.Remove(product);
+            await Context.SaveChangesAsync();
+        }
+
         //[HttpGet(Name = "GetProducts")]
         //public async Task<IEnumerable<Product>> Get()
         //{
